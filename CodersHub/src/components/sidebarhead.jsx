@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { SignedIn, UserButton } from '@clerk/clerk-react';
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { PenBox, NotebookPen, Save } from 'lucide-react';
 
 export function SideHeader({ searchQuery, setSearchQuery }) {
   return (
@@ -25,13 +26,21 @@ export function SideHeader({ searchQuery, setSearchQuery }) {
             />
           </div>
           <SignedIn>
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: 'w-10 h-10',
-                },
-              }}
-            />
+          <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: 'w-10 h-10',
+                      },
+                    }}
+                  >
+                    <UserButton.MenuItems>
+                      <UserButton.Link
+                        label="Saved Notes"
+                        labelIcon={<Save size={15} />}
+                        href="/saved-notes"
+                      />
+                    </UserButton.MenuItems>
+                  </UserButton>
           </SignedIn>
         </div>
       </div>
