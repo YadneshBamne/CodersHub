@@ -1,40 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
-//import { WarpBackground } from './components/ui/warp-background'
-import ExampleComponentDemo from './components/theme-provider'
+import AppLayout from './layout/app-layout';
+import LandingPage from './pages/landingpage';
+import AboutUs from './pages/aboutus';
+import { ThemeProvider } from './components/theme-provider';
+import Notes from './pages/notes';
+import ProtectedRoute from './components/protected-route';
+
+const router = createBrowserRouter([
+  {
+    element: <AppLayout/>,
+    children: [
+      {
+        path:'/',
+        element:
+        
+        <LandingPage/>,
+      },
+      {
+        path:'/about-us',
+        element:
+        <ProtectedRoute>
+        <AboutUs/>
+        </ProtectedRoute>
+      },
+      {
+        path:'/notes',
+        element:
+        <ProtectedRoute>
+        <Notes/>
+        </ProtectedRoute>
+      },
+    ],
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  
   return (
-    <>
-    <ExampleComponentDemo className= "w-full min-h-screen flex">
-      <div className='w-full h-full size-full'>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </ExampleComponentDemo>
-      
-    </>
-  )
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <RouterProvider router={router}/>
+      </ThemeProvider>
+  );
 }
 
 export default App
