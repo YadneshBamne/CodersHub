@@ -18,32 +18,28 @@ import { useUser } from "@clerk/clerk-react";
 import { BarLoader } from "react-spinners";
 import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
-import { addNewNote } from "@/api/api-Notes";
-import { useNavigate } from "react-router-dom";
+import { updateNote, getNoteById } from "@/api/api-Notes";
+import { useNavigate, useParams } from "react-router-dom";
 import AddTopicDrawer from "@/components/add-topic-drawer";
 
 const schema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   topic_id: z.string().min(1, { message: "Select or add a new topic" }),
-  content: z.string().min(1, { message: "Requirements are required" }),
 });
 
-const AddNotes = () => {
+const EditNotes = () => {
   const { isLoaded, user } = useUser();
   const navigate = useNavigate();
+  const { noteId } = useParams(); // Get the note ID from URL parameters
 
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      topic_id: "",
-      content: "",
-      
-    },
     resolver: zodResolver(schema),
   });
 
@@ -53,38 +49,62 @@ const AddNotes = () => {
     loading: loadingTopics,
   } = useFetch(getTopics);
 
-  useEffect(() => {
-    if (isLoaded) fnTopics();
-  }, [isLoaded]);
+  const {
+    fn: fnGetNote,
+    data: noteData,
+    loading: loadingNote,
+  } = useFetch(getNoteById);
 
   const {
-    fn: fnCreateNote,
-    loading: loadingCreateNote,
-    error: errorCreateNote,
-    data: dataCreateNote,
-  } = useFetch(addNewNote);
+    fn: fnUpdateNote,
+    loading: loadingUpdateNote,
+    error: errorUpdateNote,
+    data: dataUpdateNote,
+  } = useFetch(updateNote);
+
+  // Fetch topics and note data on component mount
+  useEffect(() => {
+    if (isLoaded) {
+      fnTopics();
+      fnGetNote(noteId);
+    }
+  }, [isLoaded, noteId]);
+
+  // Populate form with existing note data
+  useEffect(() => {
+    if (noteData) {
+      reset({
+        title: noteData.title,
+        description: noteData.description,
+        topic_id: noteData.topic_id.toString(),
+        requirements: noteData.requirements
+      });
+    }
+  }, [noteData, reset]);
 
   const onSubmit = (data) => {
-    fnCreateNote({
+    fnUpdateNote({
+      id: noteId,
       ...data,
       recruiter_id: user.id,
     });
   };
 
+  // Navigate back to notes page after successful update
   useEffect(() => {
-    if (dataCreateNote && !loadingCreateNote) {
+    if (dataUpdateNote && !loadingUpdateNote) {
       navigate("/notes");
     }
-  }, [dataCreateNote, loadingCreateNote]);
+  }, [dataUpdateNote, loadingUpdateNote]);
 
-  if (!isLoaded || loadingTopics) {
+  if (!isLoaded || loadingTopics || loadingNote) {
     return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
   }
 
   return (
     <div>
       <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
-        Post a Note
+        Edit Note
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -93,7 +113,7 @@ const AddNotes = () => {
         <Input placeholder="Note title" {...register("title")} />
         {errors.title && <p className="text-red-500">{errors.title.message}</p>}
 
-        <Textarea placeholder="Blog Description" {...register("description")} />
+        <Textarea placeholder="Note Description" {...register("description")} />
         {errors.description && (
           <p className="text-red-500">{errors.description.message}</p>
         )}
@@ -123,35 +143,46 @@ const AddNotes = () => {
               </Select>
             )}
           />
-          <AddTopicDrawer fetchTopics = {fnTopics} />
+          <AddTopicDrawer fetchTopics={fnTopics} />
         </div>
         {errors.topic_id && (
           <p className="text-red-500">{errors.topic_id.message}</p>
         )}
 
         <Controller
-          name="content"
+          name="requirements"
           control={control}
           render={({ field }) => (
             <MDEditor value={field.value || ""} onChange={field.onChange} />
           )}
         />
-        {errors.content && (
-          <p className="text-red-500">{errors.content.message}</p>
+        {errors.requirements && (
+          <p className="text-red-500">{errors.requirements.message}</p>
         )}
 
-        {errorCreateNote && (
-          <p className="text-red-500">{errorCreateNote.message}</p>
+        {errorUpdateNote && (
+          <p className="text-red-500">{errorUpdateNote.message}</p>
         )}
 
-        {loadingCreateNote && <BarLoader width={"100%"} color="#36d7b7" />}
+        {loadingUpdateNote && <BarLoader width={"100%"} color="#36d7b7" />}
 
-        <Button type="submit" variant="blue" size="lg" className="mt-2">
-          Post
-        </Button>
+        <div className="flex gap-4">
+          <Button type="submit" variant="blue" size="lg" className="mt-2">
+            Update Note
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline" 
+            size="lg" 
+            className="mt-2"
+            onClick={() => navigate("/notes")}
+          >
+            Cancel
+          </Button>
+        </div>
       </form>
     </div>
   );
 };
 
-export default AddNotes;
+export default EditNotes;
