@@ -12,19 +12,10 @@ export function SideHeader({ searchQuery, setSearchQuery }) {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center">
           <SidebarTrigger />
-          <h1 className="text-xl font-semibold ml-4 text-primary">Notes Section</h1>
+          <h1 className="text-xl font-semibold ml-4 text-primary">Students Corner</h1>
         </div>
         <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 w-[200px] lg:w-[300px] bg-background text-foreground"
-            />
-          </div>
+          
           <SignedIn>
           <UserButton
                     appearance={{

@@ -1,46 +1,85 @@
-// src/pages/notes.jsx
-import React, { useState } from 'react';
-import { NoteCard } from '@/components/NoteCard';
+import React, { useState, useEffect } from "react";
+import NoteCard from "@/components/NoteCard";
+import useFetch from "@/hooks/use-fetch";
+import { BarLoader } from "react-spinners";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Sidebar } from '@/components/Sidebar';
-import { SideHeader } from '@/components/sidebarhead';
+import { Sidebar } from "@/components/Sidebar";
+import { SideHeader } from "@/components/sidebarhead";
+import { Search } from "lucide-react";
+import { getTopics } from "@/api/api-topics";
+import { Input } from "@/components/ui/input";
+import { getNotes, saveNote } from "@/api/api-Notes";
+import { useUser } from "@clerk/clerk-react";
 
-const Notes = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+const NotesListing = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const { isLoaded } = useUser();
+  const [topic_id, setTopic_id] = useState("");
 
-  const sampleNotes = [
-    { id: 1, title: 'Arrays', text: 'Arrays are contiguous memory locations...', date: '2023-05-01' },
-    { id: 2, title: 'Linked Lists', text: 'Linked Lists are linear data structures...', date: '2023-05-03' },
-    { id: 3, title: 'Stacks', text: 'Stacks follow the Last In First Out (LIFO) principle...', date: '2023-05-05' },
-    { id: 4, title: 'Queues', text: 'Queues follow the First In First Out (FIFO) principle...', date: '2023-05-07' },
-    { id: 5, title: 'Trees', text: 'Trees are hierarchical data structures...', date: '2023-05-09' },
-    { id: 6, title: 'Graphs', text: 'Graphs are non-linear data structures...', date: '2023-05-11' },
-  ];
+  const {
+    fn: fnNotes,
+    data: notes,
+    loading: loadingNotes,
+  } = useFetch(getNotes, { searchQuery, topic_id });
 
-  // Filter notes based on search query
-  const filteredNotes = sampleNotes.filter(note =>
-    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.text.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const { fn: fnTopics, data: topics } = useFetch(getTopics);
+
+  useEffect(() => {
+    if (isLoaded) fnTopics();
+  }, [isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded) fnNotes();
+  }, [isLoaded, searchQuery, topic_id]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    let formData = new FormData(e.target);
+    const query = formData.get("search-query");
+    if (query) setSearchQuery(query);
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+  };
+
+  if (!isLoaded) {
+    return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
+  }
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground">
+      <div className="flex h-screen bg-background text-foreground overflow-hidden">
         <Sidebar />
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 overflow-auto">
           <SideHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <main className="flex-1 p-6 overflow-auto">
+          <main className="flex-1 p-6">
             <h1 className="text-3xl font-bold mb-6 text-primary">Notes</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredNotes.map((note) => (
-                <NoteCard key={note.id} {...note} />
-              ))}
+            <div className="relative mb-6 flex justify-end">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 w-[250px] lg:w-[350px] bg-background text-foreground border border-gray-300 rounded-md"
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+              {loadingNotes && <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />}
+              {!loadingNotes && notes?.length ? (
+                notes.map((note) => (
+                  <NoteCard key={note.id} note={note} savedInit={note?.saved?.length > 0} />
+                ))
+              ) : (
+                <div className="col-span-full text-center text-muted-foreground">No notes found</div>
+              )}
             </div>
           </main>
         </div>
       </div>
     </SidebarProvider>
-  )
-}
+  );
+};
 
-export default Notes;
+export default NotesListing;
