@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import AboutUs from '@/pages/aboutus';
 import { SignedIn, SignedOut, useUser, SignIn, UserButton } from '@clerk/clerk-react';
-import { PenBox, NotebookPen, Save } from 'lucide-react';
+import { PenBox, NotebookPen, Save, SaveOff, Link2 } from 'lucide-react';
 
 const Header = () => {
 
@@ -53,6 +53,11 @@ const Header = () => {
                         label="Saved Notes"
                         labelIcon={<Save size={15} />}
                         href="/saved-notes"
+                      />
+                      <UserButton.Link
+                        label="Saved Resources"
+                        labelIcon={<Link2 size={15} />}
+                        href="/saved-resources"
                       />
                     </UserButton.MenuItems>
                   </UserButton>

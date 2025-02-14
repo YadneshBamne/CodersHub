@@ -8,6 +8,7 @@ import Notes from './pages/notes';
 import ProtectedRoute from './components/protected-route';
 import AddNotes from './pages/add-notes';
 import SavedNotes from './pages/saved-notes';
+import SavedResources from './pages/saved-resources';
 import AddResoures from './pages/add-resources';
 import Resources from './pages/resources';
 import Note from './pages/note';
@@ -16,6 +17,11 @@ import AccessDenied from './pages/access-denied';
 import { ToastContainer } from 'react-toastify';
 import NotesListing from './pages/notes';
 import EditNotes from './pages/editnotes';
+import ResourcesPage from './pages/resource';
+import { useState } from "react";
+import { generateStudents } from './lib/data'; // Ensure this path is correct
+import Certificates from './pages/certificates';
+
 const router = createBrowserRouter([
   {
     element: <AppLayout/>,
@@ -64,6 +70,18 @@ const router = createBrowserRouter([
         </ProtectedRoute>
       },
       {
+        path:'/resource/:id',
+        element:
+        <ProtectedRoute>
+        <ResourcesPage/>
+        </ProtectedRoute>
+      },
+      {
+        path:'/resource/edit/:resourceId',
+        element:
+        <EditNotes/>
+      },
+      {
         path:'/add-notes',
         element:
         <ProtectedRoute>
@@ -84,11 +102,36 @@ const router = createBrowserRouter([
         <SavedNotes/>
         </ProtectedRoute>
       },
+      {
+        path:'/saved-resources',
+        element:
+        <ProtectedRoute>
+        <SavedResources/>
+        </ProtectedRoute>
+      },
+      {
+        path:'/certificates',
+        element:
+        <ProtectedRoute>
+        <Certificates/>
+        </ProtectedRoute>
+      },
     ],
   },
 ]);
 
 function App() {
+
+
+const [students, setStudents] = useState(generateStudents());
+
+const handleStarClick = (studentId, stars) => {
+  setStudents((prev) =>
+    prev.map((student) =>
+      student.id === studentId ? { ...student, stars } : student
+    )
+  );
+};
 
   
   return (

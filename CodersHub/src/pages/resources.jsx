@@ -1,73 +1,87 @@
-// src/pages/notes.jsx
-import React, { useState } from 'react';
-import NoteCard from '@/components/NoteCard';
+import React, { useState, useEffect } from "react";
+import NoteCard from "@/components/NoteCard";
+import useFetch from "@/hooks/use-fetch";
+import { BarLoader } from "react-spinners";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Sidebar } from '@/components/Sidebar';
-import { SideHeader } from '@/components/sidebarhead';
-import ResourcesCard from '@/components/ResourcesCard';
+import { Sidebar } from "@/components/Sidebar";
+import { SideHeader } from "@/components/sidebarhead";
+import { Search } from "lucide-react";
+import { getTopics } from "@/api/api-topics";
+import { Input } from "@/components/ui/input";
+import { getResources,saveResources } from "@/api/api-resources";
+import { useUser } from "@clerk/clerk-react";
+import ResourcesCard from "@/components/ResourcesCard";
 
-const Notes = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+const NotesListing = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const { isLoaded } = useUser();
+  const [topic_id, setTopic_id] = useState("");
 
-  const blogs = [
-    {
-      id: 1,
-      title: "Understanding React Hooks",
-      description:
-        "Hooks let you use state and other React features without writing a class. They make your code cleaner and simpler.",
-      topic: {
-        topic_logo_url: "https://cdn-icons-png.flaticon.com/128/1126/1126012.png",
-      },
-    },
-    {
-      id: 2,
-      title: "JavaScript ES6 Features",
-      description:
-        "ES6 introduced new features such as arrow functions, classes, template literals, and destructuring assignments.",
-      topic: {
-        topic_logo_url: "https://cdn-icons-png.flaticon.com/128/5968/5968292.png",
-      },
-    },
-    {
-      id: 3,
-      title: "CSS Grid Layout",
-      description:
-        "CSS Grid Layout is a powerful tool for creating two-dimensional layouts on the web.",
-      topic: {
-        topic_logo_url: "https://cdn-icons-png.flaticon.com/128/5968/5968282.png",
-      },
-    },
-  ];
-  const handleBlogSaved = () => {
-    console.log("Blog saved or deleted!");
+  const {
+    fn: fnResources,
+    data: resources,
+    loading: loadingResources,
+  } = useFetch(getResources, { searchQuery, topic_id });
+
+  const { fn: fnTopics, data: topics } = useFetch(getTopics);
+
+  useEffect(() => {
+    if (isLoaded) fnTopics();
+  }, [isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded) fnResources();
+  }, [isLoaded, searchQuery, topic_id]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    let formData = new FormData(e.target);
+    const query = formData.get("search-query");
+    if (query) setSearchQuery(query);
   };
 
-  // Filter notes based on search query
+  const clearFilters = () => {
+    setSearchQuery("");
+  };
+
+  if (!isLoaded) {
+    return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
+  }
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground">
+      <div className="flex h-screen bg-background text-foreground overflow-hidden w-full">
         <Sidebar />
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 overflow-auto">
           <SideHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <main className="flex-1 p-6 overflow-auto">
+          <main className="flex-1 p-6">
             <h1 className="text-3xl font-bold mb-6 text-primary">Resources</h1>
-            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {blogs.map((blog) => (
-        <ResourcesCard
-          key={blog.id}
-          blog={blog}
-          isMyBlog={false}
-          savedInit={false}
-          onBlogSaved={handleBlogSaved}
-        />
-      ))}
-    </div>
+            <div className="relative mb-6 flex justify-end">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 w-full pr-20 bg-background text-foreground  rounded-md"
+              />
+            </div>
+            {loadingResources && <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+              
+              {!loadingResources && resources?.length ? (
+                resources.map((resource) => (
+                  <ResourcesCard key={resource.id} resource={resource} savedInit={resource?.saved?.length > 0} />
+                ))
+              ) : (
+                <div className="col-span-full text-center items-center text-muted-foreground">No Resources found</div>
+              )}
+            </div>
           </main>
         </div>
       </div>
     </SidebarProvider>
-  )
-}
+  );
+};
 
-export default Notes;
+export default NotesListing;

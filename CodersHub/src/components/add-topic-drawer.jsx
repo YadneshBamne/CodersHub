@@ -1,21 +1,26 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
+import useFetch from "@/hooks/use-fetch";
+import { addNewTopic } from "@/api/api-topics";
+import { BarLoader } from "react-spinners";
 
 const schema = z.object({
-  name: z.string().min(1, { message: "Topic name is required" }),
+  name: z.string().min(1, { message: "Company name is required" }),
   logo: z
     .any()
     .refine(
@@ -28,21 +33,34 @@ const schema = z.object({
     ),
 });
 
-const AddTopicDrawer = () => {
+const AddTopicDrawer = ({fetchTopics}) => {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    console.log("Form Data:", {
-      ...data,
-      logo: data.logo[0],
-    }); // Logs the form data to the console for testing.
-  };
+  const{
+    loading: loadingAddTopic,
+    error: errorAddTopic,
+    data: dataAddTopic,
+    fn: fnAddTopic,
+  }= useFetch(addNewTopic);
+
+
+  const onSubmit = (data)=>{
+    fnAddTopic({
+        ...data,
+        logo: data.logo[0]
+    })
+  }
+
+  useEffect(() => {
+    if(dataAddTopic?.length > 0) fetchTopics();
+  }, [loadingAddTopic])
 
   return (
     <Drawer>
@@ -55,7 +73,7 @@ const AddTopicDrawer = () => {
         <DrawerHeader>
           <DrawerTitle>Add a new topic</DrawerTitle>
         </DrawerHeader>
-        <form className="flex gap-2 p-4 pb-0" onSubmit={handleSubmit(onSubmit)}>
+        <form className="flex gap-2 p-4 pb-0">
           <Input placeholder="Topic Name" {...register("name")} />
           <Input
             type="file"
@@ -64,18 +82,21 @@ const AddTopicDrawer = () => {
             {...register("logo")}
           />
 
-          <Button type="submit" variant="destructive" className="w-40">
+          <Button type="button" onClick={handleSubmit(onSubmit)} variant="destructive" className="w-40">
             Add
           </Button>
         </form>
         {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         {errors.logo && <p className="text-red-500">{errors.logo.message}</p>}
+        
+        {errorAddTopic?.message && (
+          <p className="text-red-500">{errorAddTopic?.message}</p>
+        )}
 
+        {loadingAddTopic && <BarLoader width={"100%"} color="#36d7b7" />}
         <DrawerFooter>
           <DrawerClose asChild>
-            <Button variant="secondary" type="button">
-              Cancel
-            </Button>
+            <Button variant="secondary" type="button">Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

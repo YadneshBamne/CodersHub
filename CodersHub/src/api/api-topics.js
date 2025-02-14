@@ -22,15 +22,15 @@ export async function addNewTopic(token, _, topicData) {
   const fileName = `logo-${random}-${topicData.name}`;
 
   const { error: storageError } = await supabase.storage
-    .from("topics_logo_url")
+    .from("topics-logo")
     .upload(fileName, topicData.logo);
 
   if (storageError) throw new Error("Error uploading topic Logo");
 
-  const topic_logo_url = `${supabaseUrl}/storage/v1/object/public/topics_logo_url/${fileName}`;
+  const topic_logo_url = `${supabaseUrl}/storage/v1/object/public/topics-logo/${fileName}`;
 
   const { data, error } = await supabase
-    .from("topics")
+    .from("topics-logo")
     .insert([
       {
         name: topicData.name,

@@ -35,7 +35,7 @@ const savedNotes = () => {
       </h1>
 
       {loadingSavedNotes === false && (
-        <div className=" mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className=" mt-8 grid md:grid-cols-2 lg:grid-cols-3 m-8 gap-4">
           {savedNote?.length? (
             savedNote.map((saved)=>{
                return <NoteCard key={saved.id} note={saved?.note} savedInit={true} onNoteSaved={fnSavedNotes}/>

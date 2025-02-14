@@ -49,7 +49,7 @@ const NotesListing = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground overflow-hidden">
+      <div className="flex h-screen bg-background text-foreground overflow-hidden w-full">
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-auto">
           <SideHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -62,17 +62,18 @@ const NotesListing = () => {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 w-[250px] lg:w-[350px] bg-background text-foreground border border-gray-300 rounded-md"
+                className="pl-10 w-full pr-20 bg-background text-foreground  rounded-md"
               />
             </div>
+            {loadingNotes && <BarLoader className="mt-4 items-center w-full" width={"100%"} color="#36d7b7" />}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-              {loadingNotes && <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />}
+              
               {!loadingNotes && notes?.length ? (
                 notes.map((note) => (
                   <NoteCard key={note.id} note={note} savedInit={note?.saved?.length > 0} />
                 ))
               ) : (
-                <div className="col-span-full text-center text-muted-foreground">No notes found</div>
+                <div className="col-span-full text-center items-center text-muted-foreground">No notes found</div>
               )}
             </div>
           </main>

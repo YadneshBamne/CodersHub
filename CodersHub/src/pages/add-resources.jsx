@@ -12,20 +12,28 @@ import {
   SelectGroup,
   SelectItem,
 } from "@/components/ui/select";
+import { getTopics } from "@/api/api-topics";
+import useFetch from "@/hooks/use-fetch";
+import { useUser } from "@clerk/clerk-react";
 import { BarLoader } from "react-spinners";
 import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/header";
+import { addNewResource } from "@/api/api-resources";
+import { useNavigate } from "react-router-dom";
 import AddTopicDrawer from "@/components/add-topic-drawer";
+import Header from "@/components/header";
 
 const schema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   topic_id: z.string().min(1, { message: "Select or add a new topic" }),
-  requirements: z.string().min(1, { message: "Requirements are required" }),
+  content: z.string().min(1, { message: "Requirements are required" }),
 });
 
-const AddResources = () => {
+const AddNotes = () => {
+  const { isLoaded, user } = useUser();
+  const navigate = useNavigate();
+
   const {
     register,
     control,
@@ -34,27 +42,57 @@ const AddResources = () => {
   } = useForm({
     defaultValues: {
       topic_id: "",
-      requirements: "",
+      content: "",
+      
     },
     resolver: zodResolver(schema),
   });
 
+  const {
+    fn: fnTopics,
+    data: topics,
+    loading: loadingTopics,
+  } = useFetch(getTopics);
+
+  useEffect(() => {
+    if (isLoaded) fnTopics();
+  }, [isLoaded]);
+
+  const {
+    fn: fnCreateResource,
+    loading: loadingCreateResource,
+    error: errorCreateResource,
+    data: dataCreateResource,
+  } = useFetch(addNewResource);
+
   const onSubmit = (data) => {
-    console.log(data); // For frontend, just log the form data
+    fnCreateResource({
+      ...data,
+      recruiter_id: user.id,
+    });
   };
 
+  useEffect(() => {
+    if (dataCreateResource && !loadingCreateResource) {
+      navigate("/resources");
+    }
+  }, [dataCreateResource, loadingCreateResource]);
+
+  if (!isLoaded || loadingTopics) {
+    return <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />;
+  }
+
   return (
-    <>
-    <Header/>
     <div>
+      <Header/>
       <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
-        Add Resources
+        Post Resources
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-4 p-4 pb-0"
       >
-        <Input placeholder="Resource title" {...register("title")} />
+        <Input placeholder="Note title" {...register("title")} />
         {errors.title && <p className="text-red-500">{errors.title.message}</p>}
 
         <Textarea placeholder="Resource Description" {...register("description")} />
@@ -70,43 +108,52 @@ const AddResources = () => {
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by topics">
-                    {field.value ? field.value : "Topics"}
+                    {field.value
+                      ? topics?.find((topic) => topic.id === field.value)?.name
+                      : "Topics"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    {/* Topics will be dynamic in real implementation */}
-                    <SelectItem value="1">Topic 1</SelectItem>
-                    <SelectItem value="2">Topic 2</SelectItem>
+                    {topics?.map(({ name, id }) => (
+                      <SelectItem key={id} value={id.toString()}>
+                        {name}
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
             )}
           />
-          <AddTopicDrawer />
+          <AddTopicDrawer fetchTopics = {fnTopics} />
         </div>
         {errors.topic_id && (
           <p className="text-red-500">{errors.topic_id.message}</p>
         )}
 
         <Controller
-          name="requirements"
+          name="content"
           control={control}
           render={({ field }) => (
             <MDEditor value={field.value || ""} onChange={field.onChange} />
           )}
         />
-        {errors.requirements && (
-          <p className="text-red-500">{errors.requirements.message}</p>
+        {errors.content && (
+          <p className="text-red-500">{errors.content.message}</p>
         )}
 
-        <Button type="submit" variant="destructive" size="lg" className="mt-2">
-          Add Resource
+        {errorCreateResource && (
+          <p className="text-red-500">{errorCreateResource.message}</p>
+        )}
+
+        {loadingCreateResource && <BarLoader width={"100%"} color="#36d7b7" />}
+
+        <Button type="submit" variant="blue" size="lg" className="mt-2">
+          Post
         </Button>
       </form>
     </div>
-    </>
   );
 };
 
-export default AddResources;
+export default AddNotes;

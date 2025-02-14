@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { addNewNote } from "@/api/api-Notes";
 import { useNavigate } from "react-router-dom";
 import AddTopicDrawer from "@/components/add-topic-drawer";
+import Header from "@/components/header";
 
 const schema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -83,6 +84,7 @@ const AddNotes = () => {
 
   return (
     <div>
+      <Header/>
       <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
         Post a Note
       </h1>

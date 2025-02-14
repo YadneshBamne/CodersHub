@@ -3,7 +3,7 @@ import { useUser } from '@clerk/clerk-react';
 import { useParams } from 'react-router-dom';
 import useFetch from '@/hooks/use-fetch';
 import { getSingleNote } from '@/api/api-Notes';
-import { BarLoader } from 'react-spinners';
+import { BarLoader, PropagateLoader } from 'react-spinners';
 import MDEditor from '@uiw/react-md-editor';
 import Header from '@/components/header';
 

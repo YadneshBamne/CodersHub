@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
 import {
   ClapperboardIcon as ChalkboardTeacher,
@@ -9,11 +8,17 @@ import {
   HouseIcon,
   LinkIcon,
   Info,
+  CreativeCommons,
+  FileBadge,
+  Badge,
+  Award,
+  AwardIcon,
+  LucideAward,
 } from "lucide-react";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
 import { PenBox, NotebookPen, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import {
   Sidebar as ShadSidebar,
   SidebarContent,
@@ -26,6 +31,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Link } from "react-router-dom";
 import { SignOutButton } from "@clerk/clerk-react";
+import { FaAward } from "react-icons/fa";
 
 const ADMIN_EMAILS = [
   "yadnesh2105@gmail.com",
@@ -33,30 +39,13 @@ const ADMIN_EMAILS = [
   "avanishvadke001@gmail.com",
 ]; // List of admin emails
 
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const { user } = useUser();
-
-  if (!user) {
-    return <Navigate to="/sign-in" replace />; // Redirect to login if not authenticated
-  }
-
-  const email = user.primaryEmailAddress?.emailAddress.toLowerCase();
-  const isAdmin = ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(email);
-
-  if (!isAdmin) {
-    return <Navigate to="/access-denied" replace />; // Redirect to Access Denied
-  }
-
-  return children; // Render the protected component
-};
-
 export function Sidebar() {
   const { state } = useSidebar();
   const [search, setSearch] = useSearchParams();
   const [showSignIn, setShowSignIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const { user } = useUser(); // Get user data from Clerk
+  const location = useLocation(); // Get current route
 
   useEffect(() => {
     if (user && user.primaryEmailAddress?.emailAddress) {
@@ -79,6 +68,9 @@ export function Sidebar() {
       setSearch({});
     }
   };
+
+  const isActive = (path) => location.pathname === path;
+
   return (
     <ShadSidebar className="bg-card">
       <SidebarHeader className="bg-opacity-50 bg-black">
@@ -86,7 +78,6 @@ export function Sidebar() {
       </SidebarHeader>
       <SidebarContent className="bg-opacity-50 bg-black ">
         <SignedIn>
-          {/* Show Post a Blog button only for admins */}
           {isAdmin && (
             <>
               <Link to="/add-notes">
@@ -107,6 +98,17 @@ export function Sidebar() {
                   Add Resources
                 </Button>
               </Link>
+              <Link to="/certificates">
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start ${
+                      isActive("/certificates") ? "bg-accent text-primary" : "text-foreground"
+                    } hover:text-primary hover:bg-accent`}
+                  >
+                    <FaAward className="mr-2 h-4 w-4" />
+                    Certificates
+                  </Button>
+                </Link>
             </>
           )}
 
@@ -116,7 +118,9 @@ export function Sidebar() {
                 <Link to="/">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
+                    className={`w-full justify-start rounded-lg ${
+                      isActive("/") ? "bg-accent text-primary" : "text-foreground"
+                    } hover:text-primary hover:bg-accent`}
                   >
                     <HouseIcon className="mr-2 h-4 w-4" />
                     Home
@@ -129,7 +133,9 @@ export function Sidebar() {
                 <Link to="/notes">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start bg-accent text-primary"
+                    className={`w-full justify-start ${
+                      isActive("/notes") ? "bg-accent text-primary" : "text-foreground"
+                    } hover:text-primary hover:bg-accent`}
                   >
                     <Book className="mr-2 h-4 w-4" />
                     Notes
@@ -142,7 +148,9 @@ export function Sidebar() {
                 <Link to="/about-us">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
+                    className={`w-full justify-start ${
+                      isActive("/about-us") ? "bg-accent text-primary" : "text-foreground"
+                    } hover:text-primary hover:bg-accent`}
                   >
                     <Info className="mr-2 h-4 w-4" />
                     About us
@@ -155,7 +163,9 @@ export function Sidebar() {
                 <Link to="/resources">
                   <Button
                     variant="ghost"
-                    className="w-full justify-start text-foreground hover:text-primary hover:bg-accent"
+                    className={`w-full justify-start ${
+                      isActive("/resources") ? "bg-accent text-primary" : "text-foreground"
+                    } hover:text-primary hover:bg-accent`}
                   >
                     <LinkIcon className="mr-2 h-4 w-4" />
                     Resources

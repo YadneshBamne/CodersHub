@@ -1,12 +1,15 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Sidebar } from '@/components/Sidebar';
+import { SideHeader } from "@/components/sidebarhead";
 
 export default function AboutUs() {
   return (
     <SidebarProvider>
-      <div className="flex h-screen">
+      <div className="flex h-screen w-full ">
         <Sidebar />
-        <div className="flex-1 overflow-auto">
+        
+        <div className="flex-1 overflow-clip">
+        <SideHeader />
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             <div className="space-y-12 text-center">
               {/* Header Section */}
@@ -18,7 +21,7 @@ export default function AboutUs() {
               </div>
 
               {/* Mission Section */}
-              <div className="bg-card p-8 rounded-lg shadow-sm">
+              <div className="bg-card p-8 rounded-lg shadow-sm"> 
                 <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
                 <p className="text-muted-foreground">
                   CodersHub is dedicated to creating an inclusive platform where developers 

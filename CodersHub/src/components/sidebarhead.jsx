@@ -1,6 +1,6 @@
 // src/components/sidebarhead.jsx
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Link2, Search } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { SignedIn, UserButton } from '@clerk/clerk-react';
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -29,6 +29,11 @@ export function SideHeader({ searchQuery, setSearchQuery }) {
                         label="Saved Notes"
                         labelIcon={<Save size={15} />}
                         href="/saved-notes"
+                      />
+                      <UserButton.Link
+                        label="Saved Resources"
+                        labelIcon={<Link2 size={15} />}
+                        href="/saved-resources"
                       />
                     </UserButton.MenuItems>
                   </UserButton>
