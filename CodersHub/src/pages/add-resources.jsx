@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -148,7 +148,7 @@ const AddNotes = () => {
 
         {loadingCreateResource && <BarLoader width={"100%"} color="#36d7b7" />}
 
-        <Button type="submit" variant="blue" size="lg" className="mt-2">
+        <Button type="submit" variant="destructive" size="lg" className="mt-2">
           Post
         </Button>
       </form>
