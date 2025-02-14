@@ -23,15 +23,21 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
+    // Exclude PDFKit so that Vite doesn't try to pre-bundle it
     exclude: ["pdfkit"],
   },
   esbuild: {
-    target: "es2018", // Adjust as needed (e.g., "esnext")
+    target: "es2018", // or "esnext", if that works better for your code
   },
   build: {
-    minify: false, // Disable minification temporarily
+    minify: false, // disable minification for now to narrow down the issue
     rollupOptions: {
-      external: ["pdfkit"],
+      // Treat PDFKit and any of its subpaths as external so it isn't bundled
+      external: ['pdfkit', /^pdfkit(\/.*)?$/],
+    },
+    commonjsOptions: {
+      // This helps when dependencies mix ESM and CommonJS
+      transformMixedEsModules: true,
     },
   },
 });
