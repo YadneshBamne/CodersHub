@@ -23,7 +23,9 @@
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.5",
     "@radix-ui/react-tooltip": "^1.1.6",
+    "@splinetool/r3f-spline": "^1.0.2",
     "@splinetool/react-spline": "^4.0.0",
+    "@splinetool/runtime": "^1.9.67",
     "@supabase/supabase-js": "^2.48.1",
     "@tanstack/react-table": "^8.21.2",
     "@uiw/react-md-editor": "^4.0.5",
@@ -39,6 +41,7 @@
 >>>>>>> ccad1f7ce59b5c2c81a7aa880ebcacb408feab7d
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
     "react-icons": "^5.4.0",
     "react-router-dom": "^7.1.1",
     "react-spinners": "^0.15.0",
