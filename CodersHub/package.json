@@ -33,7 +33,10 @@
     "jspdf": "^2.5.2",
     "lucide-react": "^0.469.0",
     "motion": "^11.16.0",
+<<<<<<< HEAD
+=======
     "next-themes": "^0.4.4",
+>>>>>>> ccad1f7ce59b5c2c81a7aa880ebcacb408feab7d
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
