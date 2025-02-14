@@ -41,21 +41,21 @@ const Header = () => {
               {/* When the user is signed in */}
               <SignedIn>
                 {/* Show Post a Blog button only for admins */}
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: 'w-10 h-10',
-                    },
-                  }}
-                >
-                  <UserButton.MenuItems>
-                    <UserButton.Link
-                      label="Saved Notes"
-                      labelIcon={<Save size={15} />}
-                      href="/saved-blogs"
-                    />
-                  </UserButton.MenuItems>
-                </UserButton>
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: 'w-10 h-10',
+                      },
+                    }}
+                  >
+                    <UserButton.MenuItems>
+                      <UserButton.Link
+                        label="Saved Notes"
+                        labelIcon={<Save size={15} />}
+                        href="/saved-notes"
+                      />
+                    </UserButton.MenuItems>
+                  </UserButton>
               </SignedIn>
             </div>
           </nav>

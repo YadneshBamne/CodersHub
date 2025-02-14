@@ -1,35 +1,66 @@
-import React from "react";
-import Header from "@/components/header";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Sidebar } from "@/components/Sidebar";
-import { SideHeader } from "@/components/sidebarhead";
+import { Sidebar } from '@/components/Sidebar';
 
-function AboutUs() {
-
-  const sampleNotes = [
-    { id: 1, title: 'Arrays', text: 'Arrays are contiguous memory locations...', date: '2023-05-01' },
-    { id: 2, title: 'Linked Lists', text: 'Linked Lists are linear data structures...', date: '2023-05-03' },
-    { id: 3, title: 'Stacks', text: 'Stacks follow the Last In First Out (LIFO) principle...', date: '2023-05-05' },
-    { id: 4, title: 'Queues', text: 'Queues follow the First In First Out (FIFO) principle...', date: '2023-05-07' },
-    { id: 5, title: 'Trees', text: 'Trees are hierarchical data structures...', date: '2023-05-09' },
-    { id: 6, title: 'Graphs', text: 'Graphs are non-linear data structures...', date: '2023-05-11' },
-  ];
+export default function AboutUs() {
   return (
-    <>
     <SidebarProvider>
-      <Sidebar/>
-    <div className=" flex flex-col items-center justify-center h-full">
-      
-      <h1 className="text-4xl font-bold text-black dark:text-white">
-        About Us
-      </h1>
-      <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-        Learn more about our mission and values.
-      </p>
-    </div>
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 overflow-auto">
+          <div className="container mx-auto px-4 py-8 max-w-4xl">
+            <div className="space-y-12 text-center">
+              {/* Header Section */}
+              <div className="space-y-4">
+                <h1 className="text-4xl font-bold text-primary">About CodersHub</h1>
+                <p className="text-xl text-muted-foreground">
+                  Empowering developers to learn, collaborate, and grow together
+                </p>
+              </div>
+
+              {/* Mission Section */}
+              <div className="bg-card p-8 rounded-lg shadow-sm">
+                <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
+                <p className="text-muted-foreground">
+                  CodersHub is dedicated to creating an inclusive platform where developers 
+                  can share knowledge, collaborate on projects, and build their skills 
+                  through practical learning experiences.
+                </p>
+              </div>
+
+              {/* Features Section */}
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="bg-card p-6 rounded-lg shadow-sm">
+                  <h3 className="text-xl font-semibold mb-2">Learn</h3>
+                  <p className="text-muted-foreground">Access comprehensive programming tutorials and resources</p>
+                </div>
+                <div className="bg-card p-6 rounded-lg shadow-sm">
+                  <h3 className="text-xl font-semibold mb-2">Practice</h3>
+                  <p className="text-muted-foreground">Solve real-world coding challenges and exercises</p>
+                </div>
+                <div className="bg-card p-6 rounded-lg shadow-sm">
+                  <h3 className="text-xl font-semibold mb-2">Connect</h3>
+                  <p className="text-muted-foreground">Join a community of passionate developers</p>
+                </div>
+              </div>
+
+              {/* Team Section */}
+              <div className="space-y-6">
+                <h2 className="text-2xl font-semibold">Our Team</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="bg-card p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-semibold">John Doe</h3>
+                    <p className="text-muted-foreground">Founder & Lead Developer</p>
+                  </div>
+                  <div className="bg-card p-6 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-semibold">Jane Smith</h3>
+                    <p className="text-muted-foreground">Technical Lead</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </SidebarProvider>
-    </>
   );
 }
-
-export default AboutUs;
