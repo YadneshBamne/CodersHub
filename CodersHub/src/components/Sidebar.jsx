@@ -98,7 +98,7 @@ export function Sidebar() {
                   Add Resources
                 </Button>
               </Link>
-              <Link to="/certificates">
+              {/* <Link to="/certificates">
                   <Button
                     variant="ghost"
                     className={`w-full justify-start ${
@@ -108,7 +108,7 @@ export function Sidebar() {
                     <FaAward className="mr-2 h-4 w-4" />
                     Certificates
                   </Button>
-                </Link>
+                </Link> */}
             </>
           )}
 

@@ -19,8 +19,8 @@ import NotesListing from './pages/notes';
 import EditNotes from './pages/editnotes';
 import ResourcesPage from './pages/resource';
 import { useState } from "react";
-import { generateStudents } from './lib/data'; // Ensure this path is correct
-import Certificates from './pages/certificates';
+// import { generateStudents } from './lib/data'; // Ensure this path is correct
+// import Certificates from './pages/certificates';
 
 const router = createBrowserRouter([
   {
@@ -109,13 +109,13 @@ const router = createBrowserRouter([
         <SavedResources/>
         </ProtectedRoute>
       },
-      {
-        path:'/certificates',
-        element:
-        <ProtectedRoute>
-        <Certificates/>
-        </ProtectedRoute>
-      },
+      // {
+      //   path:'/certificates',
+      //   element:
+      //   <ProtectedRoute>
+      //   <Certificates/>
+      //   </ProtectedRoute>
+      // },
     ],
   },
 ]);
@@ -123,15 +123,15 @@ const router = createBrowserRouter([
 function App() {
 
 
-const [students, setStudents] = useState(generateStudents());
+// const [students, setStudents] = useState(generateStudents());
 
-const handleStarClick = (studentId, stars) => {
-  setStudents((prev) =>
-    prev.map((student) =>
-      student.id === studentId ? { ...student, stars } : student
-    )
-  );
-};
+// const handleStarClick = (studentId, stars) => {
+//   setStudents((prev) =>
+//     prev.map((student) =>
+//       student.id === studentId ? { ...student, stars } : student
+//     )
+//   );
+// };
 
   
   return (
