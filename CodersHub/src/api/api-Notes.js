@@ -122,7 +122,7 @@ export async function updateNote(token, _, noteData) {
       title: noteData.title,
       description: noteData.description,
       topic_id: noteData.topic_id,
-      // requirements: noteData.requirements,
+      content: noteData.content,
       author_id: noteData.author_id,
     })
     .eq("id", noteData.id)
