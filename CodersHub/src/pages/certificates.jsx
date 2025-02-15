@@ -49,7 +49,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { generateStudents } from "@/lib/data";
 import { GraduationCap } from "lucide-react";
 import Header from "@/components/header";
-import { GenerateCertificates } from "./path-to-your/GenerateCertificates"; // Adjust the import path as needed
+import { GenerateCertificates } from "@/components/generate-certifictes";// Adjust the import path as needed
 
 function Certificates() {
   const [students, setStudents] = useState(generateStudents());
