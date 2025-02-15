@@ -35,8 +35,21 @@ import { FaAward } from "react-icons/fa";
 
 const ADMIN_EMAILS = [
   "yadnesh2105@gmail.com",
-  "atharvashelke2303@gmail.com",
+  "cyption.one@gmail.com",
+  "abhishemt2004@gmail.com",
   "avanishvadke001@gmail.com",
+  "atharvashelke2303@gmail.com",
+  "vedantshinde2066@gmail.com",
+  "dasparth1544@gmail.com ",
+  "aarya.bivalkar1605@gmail.com",
+  "gaikwadnayan2004@gmail.com", 
+  "abdulkhan13114@gmail.com", 
+  "moresarakshi@gmail.com", 
+  "nikhilbhosale7960@gmail.com", 
+  "zahidhamdule12@gmail.com", 
+  "durva.waghchaure1102@gmail.com", 
+  "oveedolkar@gmail.com ", 
+  "nishilrathod2512@gmail.com"
 ]; // List of admin emails
 
 export function Sidebar() {
@@ -98,7 +111,7 @@ export function Sidebar() {
                   Add Resources
                 </Button>
               </Link>
-              <Link to="/certificates">
+              {/* <Link to="/certificates">
                   <Button
                     variant="ghost"
                     className={`w-full justify-start ${
@@ -108,7 +121,7 @@ export function Sidebar() {
                     <FaAward className="mr-2 h-4 w-4" />
                     Certificates
                   </Button>
-                </Link>
+                </Link> */}
             </>
           )}
 
