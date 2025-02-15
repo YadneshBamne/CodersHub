@@ -25,6 +25,14 @@ const NoteCard = ({
   const [saved, setSaved] = useState(savedInit);
   const { user } = useUser();
   const navigate = useNavigate();
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const ADMIN_EMAILS = [
+    "yadnesh2105@gmail.com",
+    "atharvashelke2303@gmail.com",
+    "avanishvadke001@gmail.com",
+  ]; // List of admin emails
 
   const {
     fn: fnSavedNotes,
@@ -32,10 +40,7 @@ const NoteCard = ({
     loading: loadingSavedNotes,
   } = useFetch(saveNote, { alreadySaved: saved });
 
-  const {
-    fn: fnDeleteNote,
-    loading: loadingDeleteNote,
-  } = useFetch(deleteNote);
+  const { fn: fnDeleteNote, loading: loadingDeleteNote } = useFetch(deleteNote);
 
   const handleSaveNote = async () => {
     await fnSavedNotes({ user_id: user.id, note_id: note.id });
@@ -43,7 +48,7 @@ const NoteCard = ({
   };
 
   const handleDeleteNote = async () => {
-    if (window.confirm('Are you sure you want to delete this note?')) {
+    if (window.confirm("Are you sure you want to delete this note?")) {
       const response = await fnDeleteNote({ note_id: note.id });
       if (response) {
         onNoteDeleted();
@@ -60,6 +65,15 @@ const NoteCard = ({
     if (savedNotes !== undefined) setSaved(savedNotes?.length > 0);
   }, [savedNotes]);
 
+  useEffect(() => {
+    if (user && user.primaryEmailAddress?.emailAddress) {
+      const email = user.primaryEmailAddress.emailAddress.toLowerCase();
+      setIsAdmin(ADMIN_EMAILS.map((e) => e.toLowerCase()).includes(email));
+    } else {
+      setIsAdmin(false);
+    }
+  }, [user]);
+
   return (
     <Card className="flex flex-col">
       {loadingDeleteNote && (
@@ -69,16 +83,16 @@ const NoteCard = ({
         <CardTitle className="flex items-center justify-between font-bold">
           <span>{note.title}</span>
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 p-0"
-              onClick={handleEditClick}
-            >
-              <PenBox 
-                className="h-4 w-4 text-blue-500 hover:text-blue-600" 
-              />
-            </Button>
+            {isAdmin && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 p-0"
+                onClick={handleEditClick}
+              >
+                <PenBox className="h-4 w-4 text-blue-500 hover:text-blue-600" />
+              </Button>
+            )}
             {isMyNote && (
               <Button
                 variant="ghost"
@@ -86,9 +100,7 @@ const NoteCard = ({
                 className="h-8 w-8 p-0"
                 onClick={handleDeleteNote}
               >
-                <Trash2Icon 
-                  className="h-4 w-4 text-red-500 hover:text-red-600" 
-                />
+                <Trash2Icon className="h-4 w-4 text-red-500 hover:text-red-600" />
               </Button>
             )}
           </div>
