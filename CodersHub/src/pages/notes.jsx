@@ -49,7 +49,7 @@ const NotesListing = () => {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen bg-background text-foreground overflow-hidden w-full">
+      <div className="flex bg-background text-foreground overflow-hidden w-full">
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-auto">
           <SideHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
