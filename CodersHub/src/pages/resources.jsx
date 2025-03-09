@@ -8,9 +8,10 @@ import { SideHeader } from "@/components/sidebarhead";
 import { Search } from "lucide-react";
 import { getTopics } from "@/api/api-topics";
 import { Input } from "@/components/ui/input";
-import { getResources,saveResources } from "@/api/api-resources";
+import { getResources } from "@/api/api-resources";
 import { useUser } from "@clerk/clerk-react";
 import ResourcesCard from "@/components/ResourcesCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const NotesListing = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -53,7 +54,10 @@ const NotesListing = () => {
       <div className="flex h-screen bg-background text-foreground overflow-hidden w-full">
         <Sidebar />
         <div className="flex flex-col flex-1 overflow-auto">
-          <SideHeader searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <SideHeader
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
           <main className="flex-1 p-6">
             <h1 className="text-3xl font-bold mb-6 text-primary">Resources</h1>
             <div className="relative mb-6 flex justify-end">
@@ -66,15 +70,31 @@ const NotesListing = () => {
                 className="pl-10 w-full pr-20 bg-background text-foreground  rounded-md"
               />
             </div>
-            {loadingResources && <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />}
+            {loadingResources && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+                            {[...Array(4)].map((_, index) => (
+                              <div key={index} className="flex flex-col space-y-3">
+                                <Skeleton className="h-[300px] w-[290px] rounded-xl" />
+                                <div className="space-y-2">
+                                  <Skeleton className="h-4 w-[250px]" />
+                                  <Skeleton className="h-4 w-[200px]" />
+                                  <Skeleton className="h-4 w-[150px]" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-              
               {!loadingResources && resources?.length ? (
                 resources.map((resource) => (
-                  <ResourcesCard key={resource.id} resource={resource} savedInit={resource?.saved?.length > 0} />
+                  <ResourcesCard
+                    key={resource.id}
+                    resource={resource}
+                    savedInit={resource?.saved?.length > 0}
+                  />
                 ))
               ) : (
-                <div className="col-span-full text-center items-center text-muted-foreground">No Resources found</div>
+                <div className="col-span-full text-center items-center text-muted-foreground"></div>
               )}
             </div>
           </main>

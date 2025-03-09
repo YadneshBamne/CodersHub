@@ -251,9 +251,9 @@ const AddNotes = () => {
 
   if (!isLoaded || loadingTopics) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+
         <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
-      </div>
+
     );
   }
 
@@ -266,14 +266,14 @@ const AddNotes = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
       <main className="container mx-auto px-4 py-8">
         <h1 className="gradient-title font-extrabold text-5xl sm:text-7xl text-center pb-8">
           Post a Note
         </h1>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="max-w-4xl mx-auto space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className=" mx-auto space-y-6">
           {/* Title Input */}
           <div>
             <Input 

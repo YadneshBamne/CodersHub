@@ -16,13 +16,13 @@ export async function getResources(token, { resource_id, searchQuery, topic_id }
   }
   const { data, error } = await query;
   if (error) {
-    console.error("Error fetching resources :", error);
+    console.error("Error fetching resources:", error);
     return null;
   }
   return data;
 }
 
-export async function saveResources(token, { alreadySaved }, saveData) {
+export async function saveResource(token, { alreadySaved }, saveData) {
   const supabase = await supabaseClient(token);
   if (alreadySaved) {
     const { data, error: deleteError } = await supabase
@@ -30,7 +30,7 @@ export async function saveResources(token, { alreadySaved }, saveData) {
       .delete()
       .eq("resource_id", saveData.resource_id);
     if (deleteError) {
-      console.error("Error Deleting saved resources :", deleteError);
+      console.error("Error deleting saved resource:", deleteError);
       return null;
     }
     return data;
@@ -40,10 +40,9 @@ export async function saveResources(token, { alreadySaved }, saveData) {
       .insert([saveData])
       .select();
     if (insertError) {
-      console.error("Error fetching resources :", insertError);
+      console.error("Error saving resource:", insertError);
       return null;
     }
-
     return data;
   }
 }
@@ -69,7 +68,7 @@ export async function addNewResource(token, _, resourceData) {
     .insert([resourceData])
     .select();
   if (error) {
-    console.error("Error Creating New resources :", error);
+    console.error("Error creating new resource:", error);
     return null;
   }
   return data;
@@ -79,9 +78,9 @@ export async function getSavedResources(token) {
   const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("saved_resources")
-    .select("* , resource:resources(*, topic: topics(name, topic_logo_url))");
+    .select("*, resource:resources(*, topic: topics(name, topic_logo_url))");
   if (error) {
-    console.error("Error fetching saved resources :", error);
+    console.error("Error fetching saved resources:", error);
     return null;
   }
   return data;
@@ -91,10 +90,10 @@ export async function getMyResources(token, { provider_id }) {
   const supabase = await supabaseClient(token);
   const { data, error } = await supabase
     .from("resources")
-    .select("* , topic: topics(name, topic_logo_url)")
+    .select("*, topic: topics(name, topic_logo_url)")
     .eq("provider_id", provider_id);
   if (error) {
-    console.error("Error fetching resources :", error);
+    console.error("Error fetching resources:", error);
     return null;
   }
   return data;
@@ -108,7 +107,7 @@ export async function deleteResource(token, { resource_id }) {
     .eq("id", resource_id)
     .select();
   if (error) {
-    console.error("Error deleting resources :", error);
+    console.error("Error deleting resource:", error);
     return null;
   }
   return data;
@@ -122,7 +121,6 @@ export async function updateResource(token, _, resourceData) {
       title: resourceData.title,
       description: resourceData.description,
       topic_id: resourceData.topic_id,
-      // requirements: noteData.requirements,
       author_id: resourceData.author_id,
     })
     .eq("id", resourceData.id)

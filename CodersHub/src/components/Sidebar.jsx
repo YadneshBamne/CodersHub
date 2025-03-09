@@ -158,21 +158,6 @@ export function Sidebar() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <Link to="/about-us">
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start ${
-                      isActive("/about-us") ? "bg-accent text-primary" : "text-foreground"
-                    } hover:text-primary hover:bg-accent`}
-                  >
-                    <Info className="mr-2 h-4 w-4" />
-                    About us
-                  </Button>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
                 <Link to="/resources">
                   <Button
                     variant="ghost"
@@ -182,6 +167,21 @@ export function Sidebar() {
                   >
                     <LinkIcon className="mr-2 h-4 w-4" />
                     Resources
+                  </Button>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link to="/about-us">
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start ${
+                      isActive("/about-us") ? "bg-accent text-primary" : "text-foreground"
+                    } hover:text-primary hover:bg-accent`}
+                  >
+                    <Info className="mr-2 h-4 w-4" />
+                    About us
                   </Button>
                 </Link>
               </SidebarMenuButton>

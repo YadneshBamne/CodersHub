@@ -12,7 +12,7 @@ import { Heart, Trash2Icon, PenBox } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import useFetch from "@/hooks/use-fetch";
-import { deleteResource, saveResources } from "@/api/api-resources";
+import { deleteResource, saveResource } from "@/api/api-resources";
 import { BarLoader } from "react-spinners";
 
 const ResourcesCard = ({
@@ -30,7 +30,7 @@ const ResourcesCard = ({
     fn: fnSavedResources,
     data: savedResources,
     loading: loadingSavedResources,
-  } = useFetch(saveResources, { alreadySaved: saved });
+  } = useFetch(saveResource, { alreadySaved: saved });
 
   const {
     fn: fnDeleteResuorce,

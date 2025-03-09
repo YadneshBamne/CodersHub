@@ -113,6 +113,7 @@ const NoteCard = ({
       </CardHeader>
       <CardContent className="flex flex-col gap-4 flex-1">
         <div className="flex justify-between">
+          
           {note.topic && (
             <img src={note.topic.topic_logo_url} alt="topic" className="h-20" />
           )}
